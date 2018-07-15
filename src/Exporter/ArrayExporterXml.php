@@ -2,7 +2,7 @@
 
 namespace App\Exporter;
 
-class ArrayExporter
+class ArrayExporterXml
 {
     private $content;
 
@@ -14,7 +14,9 @@ class ArrayExporter
     public function create()
     {
         foreach ($this->content as $content) {
-            return json_decode($content, true);
+            $xml = simplexml_load_string($content);
+            $json = json_encode($xml);
+            return $data = json_decode($json, true);
         }
     }
 

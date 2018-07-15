@@ -2,20 +2,24 @@
 
 namespace App\Exporter;
 
-class ArrayExporter
+class JsonExporter
 {
-    private $jsonContent;
+    private $content;
 
-    public function __construct($jsonContent)
+    public function __construct(array $content)
     {
-        $this->jsonContent = $jsonContent;
+        $this->content = $content;
+    }
+
+    public function save(string $fileName): void
+    {
+        $data = $this->create();
+        file_put_contents('Json/' . $fileName . '.json', $data);
     }
 
     public function create()
     {
-        foreach ($this->jsonContent as $content) {
-            return json_decode($content, TRUE);
-        }
+        return json_encode($this->content, true);
     }
 
 }
