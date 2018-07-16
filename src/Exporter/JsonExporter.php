@@ -2,7 +2,7 @@
 
 namespace App\Exporter;
 
-class JsonExporter
+class JsonExporter implements Saveable
 {
     private $content;
 

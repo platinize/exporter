@@ -2,8 +2,8 @@
 
 namespace Tests\Downloader;
 
-use App\Exporter\ArrayExporterJson;
-use App\Exporter\ArrayExporterXml;
+use App\Importer\XmlImporter;
+use App\Importer\JsonImporter;
 use App\Exporter\JsonExporter;
 use App\Exporter\XmlExporter;
 use PHPUnit\Framework\TestCase;
@@ -22,7 +22,7 @@ class ExporterTests extends TestCase
         $json = json_encode($data);
         $expected = $data;
 
-        $arrayExporterJson = new ArrayExporterJson($this->generator($json));
+        $arrayExporterJson = new JsonImporter($this->generator($json));
         $actual = $arrayExporterJson->create();
 
         $this->assertSame($expected, $actual);
@@ -43,8 +43,9 @@ class ExporterTests extends TestCase
             ]
         ];
 
-        $arrayExporterXml = new ArrayExporterXml($this->generator($data));
+        $arrayExporterXml = new XmlImporter($this->generator($data));
         $actual = $arrayExporterXml->create();
+
         $this->assertSame($expected, $actual);
     }
 
@@ -57,12 +58,12 @@ class ExporterTests extends TestCase
                 ]
             ]
         ];
-        $expected = simplexml_load_file("App/../XmlFiles/test.xml")->asXML();
+        $expected = '<?xml version="1.0"?>'.PHP_EOL.'<data><row><exchangerate><ccy>USD</ccy><base_ccy>UAH</base_ccy><buy>26.1</buy><sale>26.3</sale></exchangerate></row></data>'.PHP_EOL;
 
         $arrayExporterXml = new XmlExporter($data);
         $arrayExporterXml->save('actual');
 
-        $actual = simplexml_load_file("App/../XmlFiles/actual.xml")->asXML();
+        $actual = file_get_contents("App/../XmlFiles/actual.xml");
         $this->assertSame($expected, $actual);
     }
 
@@ -75,7 +76,7 @@ class ExporterTests extends TestCase
                 ]
             ]
         ];
-        $expected = file_get_contents("App/../Json/test.json");
+        $expected = '{"row":{"exchangerate":{"ccy":"USD","base_ccy":"UAH","buy":"26.1","sale":"26.3"}}}';
 
         $arrayExporterJson = new JsonExporter($data);
         $arrayExporterJson->save('actual');
@@ -84,3 +85,5 @@ class ExporterTests extends TestCase
         $this->assertSame($expected, $actual);
     }
 }
+
+//var_dump(memory_get_peak_usage(false));

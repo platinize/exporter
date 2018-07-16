@@ -4,7 +4,7 @@ namespace App\Exporter;
 
 use SimpleXMLElement;
 
-class XmlExporter
+class XmlExporter implements Saveable
 {
     private $content;
 
